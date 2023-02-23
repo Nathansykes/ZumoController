@@ -11,7 +11,7 @@ using ZumoController.WinForms.Services;
 
 namespace ZumoController.WinForms
 {
-    public partial class SettingsForm : MetroFramework.Forms.MetroForm
+    public partial class SettingsForm : Form
     {
         private Settings? _settings;
 
@@ -31,14 +31,18 @@ namespace ZumoController.WinForms
             BaudTextBox.Text = Settings.BaudRate.ToString();
         }
 
+        private const string DefaultPort = "COM4";
+        private const string NoPortsText = "No Ports Available";
+
         private void GetPorts()
         {
+            PortComboBox.Items.Clear();
             var ports = SerialCommunication.GetAvailablePorts();
-            if (ports?.Any() ?? false)
+            if (ports == null || ports.Length == 0)
             {
-                ports = new List<string> { "No Ports Available" };
+                ports = new string[] { NoPortsText };
             }
-            PortComboBox.DataSource = ports;
+            PortComboBox.Items.AddRange(ports);
         }
 
         private void SettingsForm_Load(object sender, EventArgs e)
@@ -48,7 +52,8 @@ namespace ZumoController.WinForms
 
         private void SaveSettingsTile_Click(object sender, EventArgs e)
         {
-            Settings.PortName= PortComboBox.SelectedText;
+            if (string.IsNullOrWhiteSpace(PortComboBox.SelectedText) && PortComboBox.SelectedText != NoPortsText)
+                Settings.PortName = PortComboBox.SelectedText;
             Settings.BaudRate = int.Parse(BaudTextBox.Text);
             Settings.Save();
             Close();

@@ -28,22 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.SettingsFormStyleManager = new MetroFramework.Components.MetroStyleManager(this.components);
             this.SaveSettingsTile = new MetroFramework.Controls.MetroTile();
             this.BaudTextBox = new System.Windows.Forms.TextBox();
             this.BaudLabel = new MetroFramework.Controls.MetroLabel();
             this.PortComboBox = new MetroFramework.Controls.MetroComboBox();
             this.PortLabel = new MetroFramework.Controls.MetroLabel();
             this.RefreshPortsBtn = new MetroFramework.Controls.MetroButton();
-            ((System.ComponentModel.ISupportInitialize)(this.SettingsFormStyleManager)).BeginInit();
             this.SuspendLayout();
-            // 
-            // SettingsFormStyleManager
-            // 
-            this.SettingsFormStyleManager.Owner = null;
-            this.SettingsFormStyleManager.Style = MetroFramework.MetroColorStyle.Orange;
-            this.SettingsFormStyleManager.Theme = MetroFramework.MetroThemeStyle.Dark;
             // 
             // SaveSettingsTile
             // 
@@ -74,6 +65,7 @@
             this.BaudLabel.Size = new System.Drawing.Size(72, 19);
             this.BaudLabel.TabIndex = 2;
             this.BaudLabel.Text = "Baud Rate:";
+            this.BaudLabel.UseCustomBackColor = true;
             // 
             // PortComboBox
             // 
@@ -93,6 +85,7 @@
             this.PortLabel.Size = new System.Drawing.Size(37, 19);
             this.PortLabel.TabIndex = 2;
             this.PortLabel.Text = "Port:";
+            this.PortLabel.UseCustomBackColor = true;
             // 
             // RefreshPortsBtn
             // 
@@ -116,19 +109,14 @@
             this.Controls.Add(this.BaudTextBox);
             this.Controls.Add(this.SaveSettingsTile);
             this.Name = "SettingsForm";
-            this.Style = MetroFramework.MetroColorStyle.Orange;
             this.Text = "Settings";
-            this.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.Load += new System.EventHandler(this.SettingsForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.SettingsFormStyleManager)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        public MetroFramework.Components.MetroStyleManager SettingsFormStyleManager;
         private MetroFramework.Controls.MetroTile SaveSettingsTile;
         private TextBox BaudTextBox;
         private MetroFramework.Controls.MetroLabel BaudLabel;

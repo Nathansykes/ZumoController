@@ -14,4 +14,12 @@ namespace ZumoController.WinForms.Utils
             return JsonConvert.DeserializeObject<T>(json);
         }
     }
+
+    public static class ExtensionMethods
+    {
+        public static int Remap(this decimal value, decimal from1, decimal to1, decimal from2, decimal to2)
+        {
+            return (int)Math.Round((value - from1) / (to1 - from1) * (to2 - from2) + from2);
+        }
+    }
 }

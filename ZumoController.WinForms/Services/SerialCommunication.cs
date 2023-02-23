@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO.Ports;
 using System.Diagnostics;
+using ZumoController.WinForms.Utils;
 
 namespace ZumoController.WinForms.Services
 {
@@ -12,16 +13,19 @@ namespace ZumoController.WinForms.Services
     {
         #region Setup
 
-        internal SerialPort Port;
+        public SerialPort Port;
 
         public string PortName { get; private set; }
         public int BaudRate { get; private set; }
 
         public SerialCommunication(string portName, int baudRate)
         {
+            if(string.IsNullOrWhiteSpace(portName))
+                portName = "COM4";
             Port = new SerialPort(portName, baudRate);
             PortName = portName;
             BaudRate = baudRate;
+            SetDefaults();
             CheckOpenPort();
         }
         public SerialCommunication(SerialPort port)
@@ -30,6 +34,14 @@ namespace ZumoController.WinForms.Services
             PortName = Port.PortName;
             BaudRate = Port.BaudRate;
             CheckOpenPort();
+        }
+
+        public void SetDefaults()
+        {
+            Port.NewLine = "\n";
+            Port.Handshake = Handshake.None;
+            Port.DtrEnable = true;
+            Port.WriteBufferSize = 1024;
         }
 
         #endregion
@@ -53,10 +65,8 @@ namespace ZumoController.WinForms.Services
             return Port.IsOpen;
         }
 
-        public static List<string> GetAvailablePorts()
-        {
-            return SerialPort.GetPortNames().ToList();
-        }
+        public static string[] GetAvailablePorts() => SerialPort.GetPortNames();
+        
 
         #endregion
 
@@ -75,6 +85,30 @@ namespace ZumoController.WinForms.Services
             if (CheckOpenPort())
                 ret = Port.ReadExisting();
             return ret;
+        }
+
+        public void WriteMotorSpeeeds(int leftSpeed, int rightSpeed)
+        {
+            if (CheckOpenPort())
+            {
+                Port.WriteLine($"{leftSpeed},{rightSpeed}");
+            }
+        }
+
+
+        public void HandleXboxInput(short turnValue, byte forwardValue, byte reverseValue)
+        {
+            int turnAmount = ((decimal)turnValue).Remap(short.MinValue, short.MaxValue, -100, 100);
+            var normal = forwardValue - reverseValue;
+            int speed = ((decimal)(normal)).Remap(-byte.MaxValue, byte.MaxValue, -300, 300);
+
+            int speedDiff = (speed * turnAmount) / 100;
+            
+            int leftSpeed = speed + speedDiff;
+            int rightSpeed = speed - speedDiff;
+
+
+            WriteMotorSpeeeds(leftSpeed, rightSpeed);
         }
 
         #endregion
