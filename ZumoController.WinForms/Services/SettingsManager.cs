@@ -41,9 +41,16 @@ namespace ZumoController.WinForms.Services
 
     public class Settings : SettingsManager<Settings>
     {
+        public Settings() 
+        {
+            Save();
+        }
         public string PortName { get; set; } = "COM4";
         public int BaudRate { get; set; } = 9600;
         public int Speed { get; set; } = 0;
         public int Turn { get; set; } = 0;
+
+        public bool IsValid() => !string.IsNullOrWhiteSpace(PortName) && BaudRate > 0;
+        
     }
 }
