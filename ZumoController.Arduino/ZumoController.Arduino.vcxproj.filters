@@ -22,4 +22,9 @@
   <ItemGroup>
     <ClCompile Include="ZumoController.Arduino.ino" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="__vm\.ZumoController.Arduino.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
