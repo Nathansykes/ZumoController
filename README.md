@@ -5,7 +5,7 @@
 ## Instructions for use
 
 ### For the Zumo Robot
-Open the sketch in Arduino IDE
+Open the sketch "ZumoController.Arduino/ZumoController.Arduino.ino" in Arduino IDE
 
 Add the following url to the additional boards manager: 
 https://files.pololu.com/arduino/package_pololu_index.json
@@ -13,6 +13,8 @@ https://files.pololu.com/arduino/package_pololu_index.json
 Open the boards manager and install Pololu A-Star Boards
 
 Select the Pololu A-Star 32U4 as the board and upload the sketch
+
+Open the libraries manager aand install Zumo32u4 libraries
 
 ### For the UI
 Clone the repo into Visual Studio (not VSCode) 
@@ -37,11 +39,11 @@ Once launched head to the xbox tab and click to enable the controller, it should
 Head to the Key Control tab, click enable keys, this will trigger the application to start listing to keystrokes.
 
 Move the slider to adjust the speed. Controls are as follows:
--w = forward
--s = reverse
--a = turn left
--s = turn right
--x = stop
+- w = forward
+- s = reverse
+- a = turn left
+- s = turn right
+- x = stop
 
 use SHIFT to apply a speed boost
 
