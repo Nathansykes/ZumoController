@@ -34,7 +34,7 @@ Connect the controller to the computer, before starting the program.
 
 Once launched head to the xbox tab and click to enable the controller, it should now listen for input and send it to the robot.
 
-## Using the WASD keys
+#### Using the WASD keys
 
 Head to the Key Control tab, click enable keys, this will trigger the application to start listing to keystrokes.
 
