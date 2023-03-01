@@ -74,14 +74,16 @@ namespace ZumoController.WinForms
         }
 
         private const short StickDeadZone = 4000;
+        private int LastPacket = 0;
         private void XboxInputTimer_Tick(object sender, EventArgs e)
         {
             if (Controller.IsConnected)
             {
                 ControllerLabel.Text = "Connected";
                 var state = Controller.GetState();
-                if (state.PacketNumber != 0)
+                if (state.PacketNumber != LastPacket)
                 {
+                    LastPacket = state.PacketNumber;
                     //get the values from the controller
                     var a = state.Gamepad.LeftThumbX;
                     var b = state.Gamepad.RightThumbX;
@@ -110,13 +112,13 @@ namespace ZumoController.WinForms
                     RTLabel.Text = $"Right Trigger: {RTval}";
                     LTLabel.Text = $"Right Trigger: {LTval}";
                     StickLabel.Text = $"Stick Value: {turnAmount}";
-
                 }
             }
             else
             {
                 ControllerLabel.Text = "Not Connected";
             }
+                    GC.Collect();
         }
 
         public void WriteMotorSpeeeds(int leftSpeed, int rightSpeed)
@@ -146,6 +148,8 @@ namespace ZumoController.WinForms
             if (string.IsNullOrWhiteSpace(str)) return;
             var tstr = Environment.NewLine + DateTime.Now.ToString("hh:mm:ss:ff") + " - " + str;
             serialRead = tstr + serialRead;
+            if (serialRead.Length > 2000)
+                serialRead = serialRead.Substring(0, 2000);
         }
 
         private void ReadFromPort(SerialPort port)
@@ -201,7 +205,7 @@ namespace ZumoController.WinForms
             {
                 Port.Close();
             }
-            var settings = Settings.Load();
+            var settings = new Settings();
             if ((!string.IsNullOrWhiteSpace(PortComboBox.SelectedItem.ToString())) && PortComboBox.SelectedItem.ToString() != NoPortsText)
                 settings.PortName = PortComboBox.SelectedItem?.ToString() ?? "";
 

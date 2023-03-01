@@ -17,13 +17,13 @@ namespace ZumoController.WinForms.Services
 
         public static T Load(string fileName = _defaultFileName)
         {
-            T t = new T();
+            T? t = default(T);
             if (File.Exists(_defaultFileLocation + fileName))
             {
                 var fileContents = File.ReadAllText(_defaultFileLocation + fileName);
-                t = fileContents.FromJson<T>() ?? new T();
+                t = JsonConvert.DeserializeObject<T>(fileContents);
             }
-            return t;
+            return t ?? new T();
         }
 
         public void Save(string fileName = _defaultFileName)
@@ -43,7 +43,7 @@ namespace ZumoController.WinForms.Services
     {
         public Settings() 
         {
-            Save();
+            //Save();
         }
         public string PortName { get; set; } = "COM4";
         public int BaudRate { get; set; } = 9600;

@@ -75,7 +75,7 @@
             // 
             // XboxInputTimer
             // 
-            XboxInputTimer.Interval = 25;
+            XboxInputTimer.Interval = 50;
             XboxInputTimer.Tick += XboxInputTimer_Tick;
             // 
             // XboxInputBtn
