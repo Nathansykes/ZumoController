@@ -64,7 +64,7 @@ namespace ZumoController.WinForms
             }
             catch (Exception ex)
             {
-                SerialReadTextbox.Text = ex.Message;
+                serialRead = ex.Message;
             }
             ReadSerialTimer.Start();
             var settings = Settings.Load();
@@ -89,9 +89,9 @@ namespace ZumoController.WinForms
                     stickX = stickX > StickDeadZone || stickX < -StickDeadZone ? stickX : (short)0;
 
                     //map those values to the ranges we need
-                    int turnAmount = ((decimal)stickX).Remap(short.MinValue, short.MaxValue, -100, 100);
+                    int turnAmount = ((decimal)stickX).Remap(short.MinValue, short.MaxValue, -200, 200);
                     var normal = state.Gamepad.RightTrigger - state.Gamepad.LeftTrigger;
-                    int speed = ((decimal)(normal)).Remap(-byte.MaxValue, byte.MaxValue, -300, 300);
+                    int speed = ((decimal)(normal)).Remap(-byte.MaxValue, byte.MaxValue, -200, 200);
 
                     //calculate the amount to adjust the turn by
                     int speedDiff = (speed * turnAmount) / 100;
@@ -104,12 +104,12 @@ namespace ZumoController.WinForms
                     WriteMotorSpeeeds(leftSpeed, rightSpeed);
 
                     //get the values to display in GUI
-                    //var RTval = ((decimal)state.Gamepad.RightTrigger).Remap(byte.MinValue, byte.MaxValue, 0, 300);
-                    //var LTval = ((decimal)state.Gamepad.LeftTrigger).Remap(byte.MinValue, byte.MaxValue, 0, 300);
+                    var RTval = ((decimal)state.Gamepad.RightTrigger).Remap(byte.MinValue, byte.MaxValue, 0, 300);
+                    var LTval = ((decimal)state.Gamepad.LeftTrigger).Remap(byte.MinValue, byte.MaxValue, 0, 300);
 
-                    //RTLabel.Text = $"Right Trigger: {RTval}";
-                    //LTLabel.Text = $"Right Trigger: {LTval}";
-                    //StickLabel.Text = $"Stick Value: {turnAmount}";
+                    RTLabel.Text = $"Right Trigger: {RTval}";
+                    LTLabel.Text = $"Right Trigger: {LTval}";
+                    StickLabel.Text = $"Stick Value: {turnAmount}";
 
                 }
             }
@@ -136,16 +136,16 @@ namespace ZumoController.WinForms
             }
         }
 
-
-        public void HandleXboxInput(short turnValue, byte forwardValue, byte reverseValue)
-        {
-
-        }
-
         void SerialDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             var port = (SerialPort)sender;
-            ReadFromPort(port);
+            if (!port.IsOpen)
+                port.Open();
+
+            var str = port.ReadLine();
+            if (string.IsNullOrWhiteSpace(str)) return;
+            var tstr = Environment.NewLine + DateTime.Now.ToString("hh:mm:ss:ff") + " - " + str;
+            serialRead = tstr + serialRead;
         }
 
         private void ReadFromPort(SerialPort port)
@@ -260,7 +260,7 @@ namespace ZumoController.WinForms
 
         private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-           // SelectedMode = (Modes)TabControl.SelectedIndex;
+            
         }
 
         private void UpdateMode(Modes mode)
@@ -335,7 +335,15 @@ namespace ZumoController.WinForms
         {
             if (Port.IsOpen)
                 Port.Close();
-            Port.Open();
+            try
+            {
+
+                Port.Open();
+            }
+            catch (Exception ex)
+            {
+                serialRead = ex.ToString();
+            }
         }
 
         private void SendCommandBtn_Click(object sender, EventArgs e)

@@ -50,7 +50,7 @@ namespace ZumoController.WinForms.Services
         public int Speed { get; set; } = 0;
         public int Turn { get; set; } = 0;
 
-        public bool IsValid() => !string.IsNullOrWhiteSpace(PortName) && BaudRate > 0;
+        public bool IsValid() => (!string.IsNullOrWhiteSpace(PortName)) && BaudRate > 0;
         
     }
 }
