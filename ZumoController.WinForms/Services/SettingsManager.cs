@@ -15,6 +15,7 @@ namespace ZumoController.WinForms.Services
         private const string _defaultFileName = "zumo-robot-settings.json";
         private const string _defaultFileLocation = "../../";
 
+        //Load the settings from json file
         public static T Load(string fileName = _defaultFileName)
         {
             T? t = default(T);
@@ -23,7 +24,7 @@ namespace ZumoController.WinForms.Services
                 var fileContents = File.ReadAllText(_defaultFileLocation + fileName);
                 t = JsonConvert.DeserializeObject<T>(fileContents);
             }
-            return t ?? new T();
+            return t ?? new T();//get a new settings model with defaults if not able to read from JSON
         }
 
         public void Save(string fileName = _defaultFileName)

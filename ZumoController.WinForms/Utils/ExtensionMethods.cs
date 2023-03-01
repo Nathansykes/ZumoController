@@ -17,6 +17,7 @@ namespace ZumoController.WinForms.Utils
 
     public static class ExtensionMethods
     {
+        //Maps a value from a range to a new range
         public static int Remap(this decimal value, decimal from1, decimal to1, decimal from2, decimal to2)
         {
             return (int)Math.Round((value - from1) / (to1 - from1) * (to2 - from2) + from2);

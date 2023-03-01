@@ -102,23 +102,6 @@
             // 
             ReadSerialTimer.Tick += ReadSerialTimer_Tick;
             // 
-            // TabControl
-            // 
-            TabControl.Controls.Add(CommandsTab);
-            TabControl.Controls.Add(WASDTab);
-            TabControl.Controls.Add(XboxTab);
-            TabControl.Controls.Add(AutomatedTab);
-            TabControl.Controls.Add(settingsTab);
-            TabControl.HotTrack = true;
-            TabControl.ItemSize = new Size(156, 20);
-            TabControl.Location = new Point(12, 53);
-            TabControl.Name = "TabControl";
-            TabControl.SelectedIndex = 0;
-            TabControl.Size = new Size(785, 455);
-            TabControl.SizeMode = TabSizeMode.Fixed;
-            TabControl.TabIndex = 5;
-            TabControl.SelectedIndexChanged += TabControl_SelectedIndexChanged;
-            // 
             // CommandsTab
             // 
             CommandsTab.Controls.Add(SendCommandBtn);
@@ -165,6 +148,22 @@
             WASDTab.Text = "Key Control";
             WASDTab.UseVisualStyleBackColor = true;
             // 
+            // TabControl
+            // 
+            TabControl.HotTrack = true;
+            TabControl.ItemSize = new Size(156, 20);
+            TabControl.Location = new Point(12, 53);
+            TabControl.Name = "TabControl";
+            TabControl.SelectedIndex = 0;
+            TabControl.Size = new Size(785, 455);
+            TabControl.SizeMode = TabSizeMode.Fixed;
+            TabControl.TabIndex = 5;
+            TabControl.Controls.Add(CommandsTab);
+            TabControl.Controls.Add(WASDTab);
+            TabControl.Controls.Add(XboxTab);
+            TabControl.Controls.Add(AutomatedTab);
+            TabControl.Controls.Add(settingsTab);
+            //
             // WASDModeLabel
             // 
             WASDModeLabel.AutoSize = true;
