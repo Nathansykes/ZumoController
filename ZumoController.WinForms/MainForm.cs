@@ -23,6 +23,7 @@ namespace ZumoController.WinForms
         private const string Mode_SetMotors = "p";
         private const string Mode_WASD = "o";
         private const string Mode_Automated = "i";
+        private const string Mode_SemiAuto = "u";
         public void SetPortDefaults()
         {
             _port.NewLine = "\n";
@@ -56,7 +57,15 @@ namespace ZumoController.WinForms
         private void Form1_Load(object sender, EventArgs e)
         {
             Port.DataReceived += new SerialDataReceivedEventHandler(SerialDataReceived);
-            Port.Open();
+
+            try
+            {
+                Port.Open();
+            }
+            catch (Exception ex)
+            {
+                SerialReadTextbox.Text = ex.Message;
+            }
             ReadSerialTimer.Start();
             var settings = Settings.Load();
             GetPorts();
@@ -78,7 +87,7 @@ namespace ZumoController.WinForms
                     var b = state.Gamepad.RightThumbX;
                     var stickX = (long)Math.Abs((long)a) > (long)Math.Abs((long)b) ? a : b;
                     stickX = stickX > StickDeadZone || stickX < -StickDeadZone ? stickX : (short)0;
-                    
+
                     //map those values to the ranges we need
                     int turnAmount = ((decimal)stickX).Remap(short.MinValue, short.MaxValue, -100, 100);
                     var normal = state.Gamepad.RightTrigger - state.Gamepad.LeftTrigger;
@@ -130,7 +139,7 @@ namespace ZumoController.WinForms
 
         public void HandleXboxInput(short turnValue, byte forwardValue, byte reverseValue)
         {
-            
+
         }
 
         void SerialDataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -235,7 +244,8 @@ namespace ZumoController.WinForms
             None = 0,
             WASD = 1,
             Xbox = 2,
-            Auto = 3
+            Auto = 3,
+            SemiAuto = 4,
         }
         private Modes _selectedMode = Modes.None;
         private Modes SelectedMode
@@ -250,7 +260,7 @@ namespace ZumoController.WinForms
 
         private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SelectedMode = (Modes)TabControl.SelectedIndex;
+           // SelectedMode = (Modes)TabControl.SelectedIndex;
         }
 
         private void UpdateMode(Modes mode)
@@ -271,7 +281,12 @@ namespace ZumoController.WinForms
                     case Modes.Auto:
                         Port.Write(Mode_Automated + "\n");
                         break;
+                    case Modes.SemiAuto:
+                        Port.Write(Mode_SemiAuto + "\n");
+                        break;
                     case Modes.None:
+                        Port.Write(Mode_ModeSelect + "\n");
+                        break;
                     default:
                         break;
                 }
@@ -325,10 +340,44 @@ namespace ZumoController.WinForms
 
         private void SendCommandBtn_Click(object sender, EventArgs e)
         {
-            if(Port.IsOpen)
+            if (Port.IsOpen)
             {
                 Port.Write(CommandTextBox.Text);
             }
+        }
+
+        private void WASDModeToggle_CheckedChanged(object sender, EventArgs e)
+        {
+            SelectedMode = WASDModeToggle.Checked ? Modes.WASD : Modes.None;
+            XboxControlToggle.Checked = false;
+            FullAutoModeToggle.Checked = false;
+            SemiAutoModeToggle.Checked = false;
+            
+        }
+
+        private void XboxControlToggle_CheckedChanged(object sender, EventArgs e)
+        {
+            SelectedMode = XboxControlToggle.Checked ? Modes.Xbox : Modes.None;
+            WASDModeToggle.Checked = false;
+            FullAutoModeToggle.Checked = false;
+            SemiAutoModeToggle.Checked = false;
+        }
+
+        private void FullAutoModeToggle_CheckedChanged(object sender, EventArgs e)
+        {
+            SelectedMode = FullAutoModeToggle.Checked ? Modes.Auto : Modes.None;
+            WASDModeToggle.Checked = false;
+            XboxControlToggle.Checked = false;
+            SemiAutoModeToggle.Checked = false;
+            
+        }
+
+        private void SemiAutoModeToggle_CheckedChanged(object sender, EventArgs e)
+        {
+            SelectedMode = SemiAutoModeToggle.Checked ? Modes.SemiAuto : Modes.None;
+            WASDModeToggle.Checked = false;
+            XboxControlToggle.Checked = false;
+            FullAutoModeToggle.Checked = false;
         }
     }
 }
